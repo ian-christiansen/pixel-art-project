@@ -16,7 +16,9 @@
   "globals": {
     "QUnit": false,
     "before": false,
-    "cy": false
+    "cy": false,
+    "rendered": false,
+    "html2canvas": false
   },
   "rules": {
     "eqeqeq": ["error", "always"],

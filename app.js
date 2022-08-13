@@ -1,4 +1,6 @@
-/* eslint-disable no-undef */
+// rather than using this eslint setting
+// add the global var from the library to your eslint under globals
+
 import {
     createImage,
     getStorage,
@@ -26,6 +28,7 @@ const rainbowArray = ['#f54242', '#f59642', '#f5e942', '#84f542', '#42ddf5', '#b
 const paletteBtn = document.getElementById('color-select-img');
 const audio = document.getElementById('audio-bit');
 const audioButton = document.getElementById('audio-button');
+// I would move this into a data file and import
 const playlist = ['http://soundimage.org/wp-content/uploads/2017/07/Arcade-Puzzler.mp3', 'http://soundimage.org/wp-content/uploads/2017/04/Its-Raining-Pixels.mp3', 'http://soundimage.org/wp-content/uploads/2017/03/Arcade-Heroes.mp3', 'http://soundimage.org/wp-content/uploads/2017/03/Pixel-Puppies.mp3'];
 let playlistIndex = 0;
 
@@ -51,6 +54,7 @@ document.body.oncontextmenu = function(){
     mousedown = 0;
 };
 
+// i'm confused by this logic -- if the local storage key is empty then remove it?
 if (!localStorage.getItem('ACTIVEIMAGE')) {
     localStorage.removeItem('ACTIVEIMAGE');
 
@@ -69,6 +73,7 @@ if (!localStorage.getItem('ACTIVEIMAGE')) {
     rainbowIndex = 0;
     
     let mousedown = 0;
+    // these functions are repeated above -- do you need them in both places?
     document.body.onmousedown = function(){
         mousedown++;
     };
@@ -91,14 +96,19 @@ if (!localStorage.getItem('ACTIVEIMAGE')) {
                 } else if (selectedTool.id === 'eraser') {
                     canvasDivs[i].style.backgroundColor = eraserBackgroundCanvas.colors[i];
                 } else if (selectedTool.id === 'rainbow') {
-                    if (rainbowIndex === 7) {
-                        rainbowIndex = 0;
-                        canvasDivs[i].style.backgroundColor = rainbowArray[rainbowIndex];
-                        rainbowIndex++;
-                    } else {
-                        canvasDivs[i].style.backgroundColor = rainbowArray[rainbowIndex];
-                        rainbowIndex++;
-                    } } 
+                    // you can use the modulo operator to avoid the ifs here
+                    canvasDivs[i].style.backgroundColor = rainbowArray[rainbowIndex];
+                    rainbowIndex = ++rainbowIndex % 7;
+                    
+                    // if (rainbowIndex === 7) {
+                    //     rainbowIndex = 0;
+                    //     canvasDivs[i].style.backgroundColor = rainbowArray[rainbowIndex];
+                    //     rainbowIndex++;
+                    // } else {
+                    //     canvasDivs[i].style.backgroundColor = rainbowArray[rainbowIndex];
+                    //     rainbowIndex++;
+                    // } 
+                } 
             }});
         canvasDivs[i].addEventListener('click', () => {
             const selectedTool = document.querySelector(
@@ -122,6 +132,8 @@ if (!localStorage.getItem('ACTIVEIMAGE')) {
     pencil.checked = true;
 }
 
+
+// not sure why this is defined here again
 let canvasDivs = document.querySelectorAll('.pixel-div');
 
 homePageLogo.addEventListener('click', () => {
@@ -219,10 +231,11 @@ clearBtn.addEventListener('click', () => {
 saveBtn.addEventListener('click', () => {
     let key = titleKey(displayTitle.textContent);
     imageObject = getStorage(key);
-    let colorArray = [];
-    for (let i = 0; i < canvasDivs.length; i++) {
-        colorArray.push(canvasDivs[i].style.backgroundColor);
-    }
+    // just a little code golf
+    let colorArray = [...canvasDivs].map(div=>div.style.backgroundColor);
+    // for (let i = 0; i < canvasDivs.length; i++) {
+    //     colorArray.push(canvasDivs[i].style.backgroundColor);
+    // }
     const updatedImage = updateImage(imageObject, colorArray);
     setStorage(key, updatedImage);
     window.location.replace('./gallery/index.html');

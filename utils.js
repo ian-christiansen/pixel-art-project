@@ -19,38 +19,52 @@ function isEven(num) {
 }
 
 export function createImage(title, heightInput, widthInput) {
-    let area = heightInput * widthInput;
-    let halfArea = Math.ceil(area / 2);
+    // let area = heightInput * widthInput;
+    // let halfArea = Math.ceil(area / 2);
     let colorArray = [];
-    let x = widthInput / 2;
-    let y = 1;
-    if (isEven(widthInput) === true) {
-        for (let i = 0; i < halfArea; i++) {  
-            if (isEven(y) === true) {
-                colorArray.push('rgb(243, 243, 244)', 'rgb(216, 216, 217)');
-                x--;
-                if (x === 0){
-                    y++;
-                    x = widthInput / 2;
-                }
-            } else {
-                colorArray.push('rgb(216, 216, 217)', 'rgb(243, 243, 244)');
-                x--;
-                if (x === 0){
-                    y++;
-                    x = widthInput / 2;
-                }
-            }
-        }
-    } else { 
-        for (let i = 0; i < halfArea; i++) {  
-            colorArray.push('rgb(216, 216, 217)', 'rgb(243, 243, 244)'); 
+    // let x = widthInput / 2;
+    // let y = 1;
+
+    // just another approach you could try
+    // this is less optimized bc it has a nested for loop
+    // but i think its a little easier to understand
+    // on odd rows you start with gray, on even you start with white
+    // then you just push each value alternately for the entire width
+    for (let i = 0; i < heightInput; i++){
+        let tiles = isEven(i) ? ['rgb(243, 243, 244)', 'rgb(216, 216, 217)'] :
+            ['rgb(216, 216, 217)', 'rgb(243, 243, 244)'] ;
+        for (let i = 0; i < widthInput; i++){
+            colorArray.push(tiles[i % 2]);
         }
 
     }
-    while (colorArray.length > area) {
-        colorArray.pop();
-    }
+    // if (isEven(widthInput) === true) {
+    //     for (let i = 0; i < halfArea; i++) {  
+    //         if (isEven(y) === true) {
+    //             colorArray.push('rgb(243, 243, 244)', 'rgb(216, 216, 217)');
+    //             x--;
+    //             if (x === 0){
+    //                 y++;
+    //                 x = widthInput / 2;
+    //             }
+    //         } else {
+    //             colorArray.push('rgb(216, 216, 217)', 'rgb(243, 243, 244)');
+    //             x--;
+    //             if (x === 0){
+    //                 y++;
+    //                 x = widthInput / 2;
+    //             }
+    //         }
+    //     }
+    // } else { 
+    //     for (let i = 0; i < halfArea; i++) {  
+    //         colorArray.push('rgb(216, 216, 217)', 'rgb(243, 243, 244)'); 
+    //     }
+
+    // }
+    // while (colorArray.length > area) {
+    //     colorArray.pop();
+    // }
 
     let newImage = {
         title: title,
